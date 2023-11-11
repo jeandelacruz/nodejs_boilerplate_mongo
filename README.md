@@ -1,3 +1,74 @@
+# MongoDB
+
+### Comandos utiles (CLI)
+
+- Listar base de datos
+
+```sh
+show dbs
+```
+
+- Crear base de datos (Este se mantendra en memoria hasta no crear una colección)
+
+```sh
+use nombreBD
+```
+
+- Crear una colección
+  https://www.mongodb.com/docs/manual/reference/method/js-collection/
+
+```sh
+db.createCollection("nombreColeccion")
+```
+
+- Obtener todos los documentos (de una coleccion)
+
+```sh
+db.nombreColeccion.find()
+```
+
+- Insertar un documento (en una coleccion)
+
+```sh
+db.nombreColeccion.insertOne({ name: '', last_name: '' })
+```
+
+- Insertar varios documentos (en una coleccion)
+
+```sh
+db.nombreColeccion.insertMany([{}, {}])
+```
+
+- Obtener un documento (en una coleccion)
+
+```sh
+db.nombreColeccion.findOne({})
+```
+
+- Actualizar un documento (en una coleccion)
+
+```sh
+db.nombreColeccion.updateOne({ campo: "valor" }, { $set: { campo_2: "valor_2" } })
+```
+
+- Actualizar varios documentos (en una coleccion)
+
+```sh
+db.nombreColeccion.updateMany({ campo: "valor" }, { $set: { campo_2: "valor_2" } })
+```
+
+- Eliminar un documento (en una coleccion)
+
+```sh
+db.nombreColeccion.deleteOne({})
+```
+
+- Eliminar varios documentos (en una coleccion)
+
+```sh
+db.nombreColeccion.deleteMany({})
+```
+
 # Nodejs Sesion
 
 ### Principios SOLID
