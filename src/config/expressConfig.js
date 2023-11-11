@@ -20,7 +20,7 @@ export class ExpressConfig {
     this.app.use(errors());
   }
 
-  listen() {
+  async listen() {
     this.app.listen(this.port, () => {
       console.log(`Express running on ${this.port}`);
     });

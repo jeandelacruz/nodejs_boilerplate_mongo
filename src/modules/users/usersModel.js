@@ -1,46 +1,60 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, Schema, model } from "mongoose";
 
-class UserModel extends Model {
-  static associate(models) {
-    this.belongsTo(models.roles, {
-      foreignKey: "rol_id",
-      targetKey: "id",
-    });
-  }
-
-  static init(sequelize) {
-    return super.init(
-      {
-        name: {
-          type: DataTypes.STRING,
-        },
-        last_name: {
-          type: DataTypes.STRING,
-        },
-        username: {
-          type: DataTypes.STRING,
-        },
-        email: {
-          type: DataTypes.STRING,
-        },
-        password: {
-          type: DataTypes.STRING,
-        },
-        rol_id: {
-          type: DataTypes.INTEGER,
-        },
-        status: {
-          type: DataTypes.BOOLEAN,
-          defaultValue: true,
+const schema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    last_name: {
+      type: String,
+      required: true,
+    },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    rol_code: {
+      type: String,
+    },
+    status: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  {
+    collection: "users",
+    timestamps: {
+      createdAt: "created_at",
+      updatedAt: "updated_at",
+    },
+    toJSON: {
+      virtuals: true,
+    },
+    virtuals: {
+      role: {
+        options: {
+          ref: "roles",
+          localField: "rol_code",
+          foreignField: "code",
+          justOne: true,
         },
       },
-      {
-        sequelize,
-        tableName: "users",
-        modelName: "users",
-      }
-    );
+    },
   }
-}
+);
 
-export default UserModel;
+class UserModel extends Model {}
+
+schema.loadClass(UserModel);
+
+export default model("users", schema);

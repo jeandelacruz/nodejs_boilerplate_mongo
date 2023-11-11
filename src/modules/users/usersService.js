@@ -2,33 +2,33 @@ import { UserInterface } from "./usersInterface";
 import { UserNotFound } from "./usersException";
 
 export class UserService extends UserInterface {
-  constructor(models, passwordService) {
+  constructor(userModel, passwordService) {
     super();
-    this.userModel = models.users;
-    this.roleModel = models.roles;
+    this.userModel = userModel;
     this.passwordService = passwordService;
   }
 
   async getAll() {
-    return await this.userModel.findAll({
-      attributes: {
-        exclude: ["password"],
-      },
-      where: {
+    return await this.userModel
+      .find({
         status: true,
-      },
-      order: [["id", "ASC"]],
-      include: {
-        model: this.roleModel,
-        attributes: {
-          exclude: ["status", "created_at", "updated_at"],
+      })
+      .populate([
+        {
+          path: "role",
+          select: ["-status", "-created_at", "-updated_at"],
         },
-      },
-    });
+      ])
+      .select(["-password"])
+      .sort({
+        // -1 -> DESC
+        // 1 -> ASC
+        created_at: 1,
+      });
   }
 
-  async getById(id) {
-    const user = await this.userModel.findOne({ where: id });
+  async getById(username) {
+    const user = await this.userModel.findOne({ username });
     if (!user) {
       throw new UserNotFound();
     }
@@ -53,7 +53,7 @@ export class UserService extends UserInterface {
       );
       body.password = hashPassword;
     }
-    await user.update(body);
+    await user.updateOne(body);
 
     return user;
   }
@@ -63,7 +63,7 @@ export class UserService extends UserInterface {
     if (!user) {
       throw new UserNotFound();
     }
-    await user.destroy();
+    await user.deleteOne();
     return user;
   }
 }

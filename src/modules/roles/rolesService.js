@@ -7,11 +7,11 @@ export class RoleService extends RoleInterface {
   }
 
   async getAll() {
-    return await this.roleModel.findAll();
+    return await this.roleModel.find();
   }
 
-  async getById(id) {
-    return await this.roleModel.findOne({ where: id });
+  async getById(code) {
+    return await this.roleModel.findOne({ code });
   }
 
   async create(body) {
@@ -21,7 +21,7 @@ export class RoleService extends RoleInterface {
   async update(id, body) {
     const role = await this.getById(id);
     if (role) {
-      await role.update(body);
+      await role.updateOne(body);
     }
     return role;
   }
@@ -29,7 +29,7 @@ export class RoleService extends RoleInterface {
   async delete(id) {
     const role = await this.getById(id);
     if (role) {
-      await role.destroy();
+      await role.deleteOne();
     }
     return role;
   }

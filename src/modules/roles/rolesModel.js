@@ -1,30 +1,35 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, Schema, model } from "mongoose";
 
-class RoleModel extends Model {
-  static associate(models) {
-    this.hasMany(models.users, {
-      foreignKey: "rol_id",
-    });
+// https://mongoosejs.com/docs/schematypes.html
+const schema = new Schema(
+  {
+    name: {
+      // Administrador
+      type: String,
+      required: true,
+    },
+    code: {
+      // ADMIN
+      type: String,
+      required: true,
+      unique: true,
+    },
+    status: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  {
+    collection: "roles",
+    timestamps: {
+      createdAt: "created_at",
+      updatedAt: "updated_at",
+    },
   }
+);
 
-  static init(sequelize) {
-    return super.init(
-      {
-        name: {
-          type: DataTypes.STRING,
-        },
-        status: {
-          type: DataTypes.BOOLEAN,
-          defaultValue: true,
-        },
-      },
-      {
-        sequelize,
-        tableName: "roles",
-        modelName: "roles",
-      }
-    );
-  }
-}
+class RoleModel extends Model {}
 
-export default RoleModel;
+schema.loadClass(RoleModel);
+
+export default model("roles", schema);

@@ -1,6 +1,10 @@
 import "dotenv/config";
 import { ExpressConfig } from "./config/expressConfig";
+import mongoConnect from "./config/mongoConfig";
 
 const express = new ExpressConfig();
 
-express.listen();
+(async () => {
+  await mongoConnect();
+  await express.listen();
+})();
